@@ -1,1 +1,68 @@
 
+import React, { useState } from "react";
+
+function Subscriptions() {
+  const [subscriptions, setSubscriptions] = useState([
+    { name: "Netflix", price: 15, status: "active", pausedSince: null },
+    { name: "Disney+", price: 9, status: "paused", pausedSince: "2026-03" },
+  ]);
+
+  const toggleStatus = (index) => {
+    const updated = [...subscriptions];
+    const sub = updated[index];
+
+    if (sub.status === "active") {
+      sub.status = "paused";
+      sub.pausedSince = new Date().toISOString().slice(0, 7); // YYYY-MM
+    } else {
+      sub.status = "active";
+      sub.pausedSince = null;
+    }
+
+    setSubscriptions(updated);
+  };
+
+  const calculateSavings = (sub) => {
+    if (sub.status !== "paused" || !sub.pausedSince) return 0;
+
+    const now = new Date();
+    const pausedDate = new Date(sub.pausedSince);
+
+    const months =
+      (now.getFullYear() - pausedDate.getFullYear()) * 12 +
+      (now.getMonth() - pausedDate.getMonth());
+
+    return months * sub.price;
+  };
+
+  return (
+    <div>
+      <h2>Subscriptions</h2>
+
+      {subscriptions.map((sub, index) => (
+        <div
+          key={index}
+          style={{
+            border: "1px solid #ccc",
+            padding: "10px",
+            marginBottom: "10px",
+          }}
+        >
+          <h3>{sub.name}</h3>
+          <p>€{sub.price}/month</p>
+          <p>Status: {sub.status}</p>
+
+          {sub.status === "paused" && (
+            <p>Saved: €{calculateSavings(sub)}</p>
+          )}
+
+          <button onClick={() => toggleStatus(index)}>
+            {sub.status === "active" ? "Pause" : "Resume"}
+          </button>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+export default Subscriptions;
