@@ -7,7 +7,7 @@ import Suggestions from "../components/Suggestions";
 function App() {
   const [page, setPage] = useState("dashboard");
 
-  const renderPage = () => {
+  const renderPage = () => { 
     switch (page) {
       case "dashboard":
         return <Dashboard />;
